@@ -1,0 +1,11 @@
+ktor {
+    deployment {
+        port = 8080
+    }
+    application {
+        modules = [ info.adavis.UFOSightingsAppKt.main ]
+    }
+}
+
+sports_api_username = ""
+sports_api_password = ""
