@@ -23,6 +23,7 @@ repositories {
     maven { url "http://dl.bintray.com/kotlin/ktor" }
     maven { url "https://dl.bintray.com/kotlin/kotlinx" }
     maven { url "https://dl.bintray.com/pgutkowski/Maven" }
+    maven { url "https://dl.bintray.com/kotlin/squash" }
 }
 
 ext {
@@ -30,6 +31,8 @@ ext {
     logback_version = '1.2.3'
     fuel_version = '1.12.1'
     kgraphql_version = '0.2.5'
+    koin_version = '0.8.2'
+    squash_version = '0.2.2'
 }
 
 dependencies {
@@ -49,6 +52,12 @@ dependencies {
 
     // GraphQL
     compile "com.github.pgutkowski:kgraphql:$kgraphql_version"
+
+    // Dependency Injection
+    compile "org.koin:koin-ktor:$koin_version"
+
+    // Database
+    compile "org.jetbrains.squash:squash-h2:$squash_version"
 
     // Testing
     testCompile group: 'junit', name: 'junit', version: '4.12'
