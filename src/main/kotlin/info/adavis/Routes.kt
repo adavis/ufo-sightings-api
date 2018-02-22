@@ -15,7 +15,6 @@ fun Application.routes() {
         val gson: Gson by inject()
         val appSchema: AppSchema by inject()
 
-        sportsSources()
         graphql(log, gson, appSchema.schema)
 
         static("/") {

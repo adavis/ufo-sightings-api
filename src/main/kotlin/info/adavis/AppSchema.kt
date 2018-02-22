@@ -2,7 +2,6 @@ package info.adavis
 
 import com.github.pgutkowski.kgraphql.KGraphQL
 import info.adavis.dao.UFOSightingStorage
-import info.adavis.model.Player
 import info.adavis.model.UFOSighting
 import org.koin.standalone.KoinComponent
 import java.time.LocalDate
@@ -28,10 +27,6 @@ class AppSchema(private val storage: UFOSightingStorage) : KoinComponent {
 
         query("sighting") {
             resolver { id: Int -> storage.getSighting(id) ?: throw NotFoundException("Sighting with id: $id does not exist") }
-        }
-
-        type<Player> {
-            description = "A NBA Player on a Team"
         }
 
         type<UFOSighting> {

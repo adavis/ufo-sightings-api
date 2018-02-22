@@ -18,7 +18,7 @@ abstract class CSVDataImporter {
                     consumer(line.split("\\s*,\\s*".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
                 }
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             throw RuntimeException("Failed to perform import", e)
         }
     }

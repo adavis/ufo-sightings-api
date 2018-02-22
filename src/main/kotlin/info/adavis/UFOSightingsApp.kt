@@ -13,9 +13,6 @@ import org.koin.Koin
 import org.koin.log.PrintLogger
 import org.koin.standalone.StandAloneContext.startKoin
 
-lateinit var sportsApiUsername: String
-lateinit var sportsApiPassword: String
-
 @Suppress("unused")
 fun Application.main() {
     Koin.logger = PrintLogger()
@@ -30,11 +27,6 @@ fun Application.main() {
     }
 
     importData()
-
-    with(environment.config) {
-        sportsApiUsername = property("sports_api_username").getString()
-        sportsApiPassword = property("sports_api_password").getString()
-    }
 
     log.info("Application setup complete")
 }
