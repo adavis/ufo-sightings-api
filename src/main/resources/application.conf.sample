@@ -1,10 +1,18 @@
 ktor {
     deployment {
         port = 8080
+        autoreload = true
+        watch = [ ufo-sightings ]
     }
     application {
-        modules = [ info.adavis.UFOSightingsAppKt.main ]
+        modules = [ info.adavis.UFOSightingsAppKt.main,
+                    info.adavis.RoutesKt.routes ]
     }
+}
+
+database {
+  storage = ".database"
+  logsql = true
 }
 
 sports_api_username = ""
