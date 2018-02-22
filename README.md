@@ -5,7 +5,7 @@
 This is a sample app for demonstrating creating a GraphQL API written entirely in Kotlin. It uses the following primary dependencies:
 * [Ktor - Server](http://ktor.io)
 * [Koin - Dependency Injection](https://github.com/Ekito/koin)
-* [KGraphQL](https://github.com/pgutkowski/KGraphQL) 
+* [KGraphQL - GraphQL Server](https://github.com/pgutkowski/KGraphQL) 
 * [Squash - Database Access](https://github.com/orangy/squash)
 
 
