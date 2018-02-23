@@ -1,6 +1,5 @@
 package info.adavis
 
-import com.google.gson.Gson
 import io.ktor.application.Application
 import io.ktor.application.log
 import io.ktor.content.default
@@ -12,10 +11,9 @@ import org.koin.ktor.ext.inject
 fun Application.routes() {
 
     routing {
-        val gson: Gson by inject()
         val appSchema: AppSchema by inject()
 
-        graphql(log, gson, appSchema.schema)
+        graphql(log, appSchema.schema)
 
         static("/") {
             default("index.html")
