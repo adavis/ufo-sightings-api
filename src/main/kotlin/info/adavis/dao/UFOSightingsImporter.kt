@@ -35,11 +35,13 @@ open class UFOSightingsImporter : CSVDataImporter(), KoinComponent {
                         latitude = row[7].toDouble(),
                         longitude = row[8].toDouble()
                 )
-                log.info("the inserted id: ${sightingsDatabase.createSighting(ufoSighting)}")
+                sightingsDatabase.createSighting(ufoSighting)
             } catch (e: Exception) {
                 log.error(e.message)
             }
         }
+
+        log.info("Import complete")
     }
 }
 

@@ -6,7 +6,7 @@ import info.adavis.model.UFOSighting
 import org.koin.standalone.KoinComponent
 import java.time.LocalDate
 
-class AppSchema(private val storage: UFOSightingStorage) : KoinComponent {
+class AppSchema(private val storage: UFOSightingStorage) {
 
     val schema = KGraphQL.schema {
 
