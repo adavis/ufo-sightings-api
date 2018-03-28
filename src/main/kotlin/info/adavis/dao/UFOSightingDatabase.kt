@@ -1,10 +1,12 @@
 package info.adavis.dao
 
 import info.adavis.dao.UFOSightings.id
+import info.adavis.model.CountrySightings
 import info.adavis.model.UFOSighting
 import org.jetbrains.squash.connection.DatabaseConnection
 import org.jetbrains.squash.connection.transaction
 import org.jetbrains.squash.dialects.h2.H2Connection
+import org.jetbrains.squash.expressions.count
 import org.jetbrains.squash.expressions.eq
 import org.jetbrains.squash.query.*
 import org.jetbrains.squash.results.ResultRow
@@ -27,6 +29,11 @@ fun ResultRow.toUFOSighting() = UFOSighting(
             longitude = this[UFOSightings.longitude].toDouble()
     )
 
+fun ResultRow.toCountrySightings() = CountrySightings(numOccurrences = this[2]).apply {
+    state = this@toCountrySightings[0]
+    country = this@toCountrySightings[1]
+}
+
 class UFOSightingDatabase(val db: DatabaseConnection = H2Connection.createMemoryConnection()) : UFOSightingStorage {
 
     init {
@@ -43,10 +50,21 @@ class UFOSightingDatabase(val db: DatabaseConnection = H2Connection.createMemory
     override fun getAll(size: Long): List<UFOSighting>  = db.transaction {
         from(UFOSightings)
                 .select()
-                .orderBy(UFOSightings.date, false)
+                .orderBy(UFOSightings.date, ascending = false)
                 .limit(size)
                 .execute()
                 .map { it.toUFOSighting() }
+                .toList()
+    }
+
+    override fun getTopSightings(): List<CountrySightings>  = db.transaction {
+        from(UFOSightings)
+                .select(UFOSightings.state, UFOSightings.country, UFOSightings.state.count())
+                .groupBy(UFOSightings.state, UFOSightings.country)
+                .orderBy(UFOSightings.state.count(), ascending = false)
+                .limit(10)
+                .execute()
+                .map { it.toCountrySightings() }
                 .toList()
     }
 
