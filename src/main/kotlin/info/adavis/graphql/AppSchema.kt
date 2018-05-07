@@ -1,10 +1,10 @@
-package info.adavis
+package info.adavis.graphql
 
 import com.github.pgutkowski.kgraphql.KGraphQL
+import info.adavis.NotFoundException
 import info.adavis.dao.UFOSightingStorage
 import info.adavis.model.CountrySightings
 import info.adavis.model.UFOSighting
-import org.koin.standalone.KoinComponent
 import java.time.LocalDate
 
 class AppSchema(private val storage: UFOSightingStorage) {
@@ -21,7 +21,7 @@ class AppSchema(private val storage: UFOSightingStorage) {
         }
 
         query("sightings") {
-            resolver { size: Long? -> storage.getAll(size ?: 10) }.withArgs {
+            resolver { size: Int? -> storage.getAll(size?.toLong() ?: 10) }.withArgs {
                 arg<Long> { name = "size"; defaultValue = 10; description = "The number of records to return" }
             }
         }
@@ -31,11 +31,25 @@ class AppSchema(private val storage: UFOSightingStorage) {
         }
 
         query("topSightings") {
+            description = "Returns a list of the top 10 state,country based on the number of sightings"
+
             resolver(storage::getTopSightings)
         }
 
+        mutation("createUFOSighting") {
+            description = "Adds a new UFO Sighting to the database"
+
+            resolver { input: CreateUFOSightingInput -> storage.createSighting(input.toUFOSighting()) }
+        }
+
+        inputType<CreateUFOSightingInput>()
+
         type<UFOSighting> {
             description = "A UFO sighting"
+
+            property(UFOSighting::date) {
+                description = "The date of the sighting"
+            }
         }
 
         type<CountrySightings> {
