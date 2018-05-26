@@ -34,7 +34,9 @@ fun ResultRow.toCountrySightings() = CountrySightings(numOccurrences = this[2]).
     country = this@toCountrySightings[1]
 }
 
-class UFOSightingDatabase(val db: DatabaseConnection = H2Connection.createMemoryConnection()) : UFOSightingStorage {
+class UFOSightingDatabase(
+        val db: DatabaseConnection = H2Connection.createMemoryConnection(catalogue = "DB_CLOSE_DELAY=-1")
+) : UFOSightingStorage {
 
     init {
         db.transaction {
@@ -47,7 +49,7 @@ class UFOSightingDatabase(val db: DatabaseConnection = H2Connection.createMemory
         row?.toUFOSighting()
     }
 
-    override fun getAll(size: Long): List<UFOSighting>  = db.transaction {
+    override fun getAll(size: Long): List<UFOSighting> = db.transaction {
         from(UFOSightings)
                 .select()
                 .orderBy(UFOSightings.date, ascending = false)
@@ -57,29 +59,46 @@ class UFOSightingDatabase(val db: DatabaseConnection = H2Connection.createMemory
                 .toList()
     }
 
-    override fun getTopSightings(): List<CountrySightings>  = db.transaction {
+    override fun getTopSightings(): List<CountrySightings> = db.transaction {
         from(UFOSightings)
                 .select(UFOSightings.state, UFOSightings.country, UFOSightings.state.count())
                 .groupBy(UFOSightings.state, UFOSightings.country)
                 .orderBy(UFOSightings.state.count(), ascending = false)
+                .where { UFOSightings.country eq "" }
                 .limit(10)
                 .execute()
                 .map { it.toCountrySightings() }
                 .toList()
     }
 
-    override fun createSighting(sighting: UFOSighting) = db.transaction {
-        insertInto(UFOSightings).values {
-            it[date] = sighting.date
-            it[city] = sighting.city
-            it[state] = sighting.state
-            it[country] = sighting.country
-            it[shape] = sighting.shape
-            it[duration] = sighting.duration.toBigDecimal()
-            it[comments] = sighting.comments
-            it[latitude] = sighting.latitude.toBigDecimal()
-            it[longitude] = sighting.longitude.toBigDecimal()
-        }.fetch(id).execute()
+    override fun getTopCountrySightings(): List<CountrySightings> = db.transaction {
+        from(UFOSightings)
+                .select(UFOSightings.country, UFOSightings.country.count())
+                .groupBy(UFOSightings.country)
+                .orderBy(UFOSightings.country.count(), ascending = false)
+                .limit(10)
+                .execute()
+                .map { CountrySightings(numOccurrences = it[1]).apply { country = it[0] } }
+                .toList()
+    }
+
+    override fun createSighting(sighting: UFOSighting): UFOSighting {
+        val id = db.transaction {
+            insertInto(UFOSightings).values {
+                it[date] = sighting.date
+                it[city] = sighting.city
+                it[state] = sighting.state
+                it[country] = sighting.country
+                it[shape] = sighting.shape
+                it[duration] = sighting.duration.toBigDecimal()
+                it[comments] = sighting.comments
+                it[latitude] = sighting.latitude.toBigDecimal()
+                it[longitude] = sighting.longitude.toBigDecimal()
+            }.fetch(id).execute()
+        }
+
+        sighting.id = id
+        return sighting
     }
 
     override fun close() {

@@ -21,12 +21,16 @@ class AppSchema(private val storage: UFOSightingStorage) {
         }
 
         query("sightings") {
+            description = "Returns a subset of the UFO Sighting records"
+
             resolver { size: Int? -> storage.getAll(size?.toLong() ?: 10) }.withArgs {
                 arg<Long> { name = "size"; defaultValue = 10; description = "The number of records to return" }
             }
         }
 
         query("sighting") {
+            description = "Returns a single UFO Sighting record based on the id"
+
             resolver { id: Int -> storage.getSighting(id) ?: throw NotFoundException("Sighting with id: $id does not exist") }
         }
 
@@ -34,6 +38,12 @@ class AppSchema(private val storage: UFOSightingStorage) {
             description = "Returns a list of the top 10 state,country based on the number of sightings"
 
             resolver(storage::getTopSightings)
+        }
+
+        query("topCountrySightings") {
+            description = "Returns a list of the top 10 countries based on the number of sightings"
+
+            resolver(storage::getTopCountrySightings)
         }
 
         mutation("createUFOSighting") {
