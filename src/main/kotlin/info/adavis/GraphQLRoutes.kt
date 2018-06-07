@@ -14,6 +14,15 @@ import org.slf4j.Logger
 @Location("/graphql")
 data class GraphQLRequest(val query: String = "", val variables: Map<String, Any> = emptyMap())
 
+fun GraphQLErrors.asMap(): Map<String, Map<String, String>> {
+    return mapOf("errors"
+            to mapOf("message"
+                to "Caught ${e.javaClass.simpleName}: ${e.message?.replace("\"", "")}")
+    )
+}
+
+data class GraphQLErrors(val e: Exception)
+
 fun Route.graphql(log: Logger, gson: Gson, schema: Schema) {
     post<GraphQLRequest> {
         val request = call.receive<GraphQLRequest>()
@@ -24,6 +33,11 @@ fun Route.graphql(log: Logger, gson: Gson, schema: Schema) {
         val variables = gson.toJson(request.variables)
         log.info("the graphql variables: $variables")
 
-        call.respondText(schema.execute(query, variables), ContentType.Application.Json)
+        try {
+            val result = schema.execute(query, variables)
+            call.respondText(result)
+        } catch (e: Exception) {
+            call.respondText(gson.toJson(GraphQLErrors(e).asMap()))
+        }
     }
 }
