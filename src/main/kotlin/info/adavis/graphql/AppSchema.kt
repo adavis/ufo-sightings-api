@@ -5,6 +5,8 @@ import info.adavis.NotFoundException
 import info.adavis.dao.UFOSightingStorage
 import info.adavis.model.CountrySightings
 import info.adavis.model.UFOSighting
+import info.adavis.model.User
+import info.adavis.model.users
 import java.time.LocalDate
 
 class AppSchema(private val storage: UFOSightingStorage) {
@@ -34,6 +36,12 @@ class AppSchema(private val storage: UFOSightingStorage) {
             resolver { id: Int -> storage.getSighting(id) ?: throw NotFoundException("Sighting with id: $id does not exist") }
         }
 
+        query("user") {
+            description = "Returns a single User based on the id"
+
+            resolver { id: Int -> users.getOrNull(id) ?: throw NotFoundException("User with id: $id does not exist") }
+        }
+
         query("topSightings") {
             description = "Returns a list of the top 10 state,country based on the number of sightings"
 
@@ -60,10 +68,24 @@ class AppSchema(private val storage: UFOSightingStorage) {
             property(UFOSighting::date) {
                 description = "The date of the sighting"
             }
+
+            property<User>("user") {
+                resolver { _ ->
+                    users[(0..2).shuffled().last()]
+                }
+            }
         }
 
         type<CountrySightings> {
             description = "A country sighting; contains total number of occurrences"
+        }
+
+        type<User> {
+            description = "A User who has reported a UFO sighting"
+
+            property<UFOSighting?>("sighting") {
+                resolver { user -> storage.getSighting(user.id) }
+            }
         }
     }
 
