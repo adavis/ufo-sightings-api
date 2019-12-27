@@ -4,11 +4,13 @@ import com.google.gson.Gson
 import info.adavis.graphql.AppSchema
 import io.ktor.application.Application
 import io.ktor.application.log
-import io.ktor.content.default
-import io.ktor.content.static
+import io.ktor.http.content.default
+import io.ktor.http.content.static
+import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.routing.routing
 import org.koin.ktor.ext.inject
 
+@KtorExperimentalLocationsAPI
 @Suppress("unused")
 fun Application.routes() {
 

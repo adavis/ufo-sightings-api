@@ -3,8 +3,8 @@ package info.adavis.dao
 import info.adavis.model.UFOSighting
 import io.ktor.application.Application
 import io.ktor.application.log
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import org.slf4j.Logger
 import java.io.InputStream
 import java.time.LocalDate
@@ -36,6 +36,8 @@ open class UFOSightingsImporter : CSVDataImporter(), KoinComponent {
                         longitude = row[8].toDouble()
                 )
                 sightingsDatabase.createSighting(ufoSighting)
+
+//                log.debug("inserting a record: $ufoSighting")
             } catch (e: Exception) {
                 log.error(e.message)
             }
