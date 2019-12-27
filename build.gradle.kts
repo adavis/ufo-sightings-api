@@ -1,5 +1,6 @@
 import io.kotless.DSLType
 import io.kotless.plugin.gradle.dsl.kotless
+import io.kotless.plugin.gradle.dsl.Webapp.Route53
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 
 group = "info.adavis"
@@ -28,10 +29,10 @@ val ktor_version = "1.3.0-rc"
 
 dependencies {
     // Ktor Server
-    implementation("io.ktor", "ktor-server-core", "$ktor_version")
-    implementation("io.ktor", "ktor-server-netty", "$ktor_version")
-    implementation("io.ktor", "ktor-gson", "$ktor_version")
-    implementation("io.ktor", "ktor-locations", "$ktor_version")
+    implementation("io.ktor", "ktor-server-core", ktor_version)
+    implementation("io.ktor", "ktor-server-netty", ktor_version)
+    implementation("io.ktor", "ktor-gson", ktor_version)
+    implementation("io.ktor", "ktor-locations", ktor_version)
 
     // Kotless
     implementation("io.kotless", "ktor-lang", "0.1.2")
@@ -51,22 +52,19 @@ dependencies {
 
 kotless {
     config {
-        bucket = "eu.ktor-kotless-ufo.s3.adavis.info"
-        prefix = "ktor-kotless-ufo"
+        bucket = "ktor-kotless-ufo.s3.adavis.info"
 
         dsl {
             type = DSLType.Ktor
         }
 
         terraform {
-            profile = "kotless-jetbrains"
-            region = "eu-west-1"
+            profile = "default"
+            region = "us-east-1"
         }
     }
 
     webapp {
-        lambda {
-
-        }
+        route53 = Route53("api", "ktor-kotless-ufo.info")
     }
 }
