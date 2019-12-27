@@ -25,14 +25,13 @@ repositories {
     maven(url = "https://dl.bintray.com/kotlin/squash")
 }
 
-val ktor_version = "1.3.0-rc"
+val ktorVersion = "1.3.0-rc"
 
 dependencies {
     // Ktor Server
-    implementation("io.ktor", "ktor-server-core", ktor_version)
-    implementation("io.ktor", "ktor-server-netty", ktor_version)
-    implementation("io.ktor", "ktor-gson", ktor_version)
-    implementation("io.ktor", "ktor-locations", ktor_version)
+    implementation("io.ktor", "ktor-server-core", ktorVersion)
+    implementation("io.ktor", "ktor-server-netty", ktorVersion)
+    implementation("io.ktor", "ktor-gson", ktorVersion)
 
     // Kotless
     implementation("io.kotless", "ktor-lang", "0.1.2")

@@ -10,10 +10,8 @@ import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.routing.routing
 import org.koin.ktor.ext.inject
 
-@KtorExperimentalLocationsAPI
 @Suppress("unused")
 fun Application.routes() {
-
     routing {
         val appSchema: AppSchema by inject()
         val gson: Gson by inject()
