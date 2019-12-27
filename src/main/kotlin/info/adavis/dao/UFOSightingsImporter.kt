@@ -10,7 +10,7 @@ import java.io.InputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-fun String.asResourceStream(): InputStream = this.javaClass::class.java.getResource(this).openStream()
+fun String.asResourceStream(): InputStream = UFOSightingsImporter::class.java.getResourceAsStream(this)
 
 private const val CSV_FILE_NAME = "/ufo_sightings_2013_2014.csv"
 private const val DATE_FORMAT = "M/d/yyyy"

@@ -25,7 +25,7 @@ repositories {
     maven(url = "https://dl.bintray.com/kotlin/squash")
 }
 
-val ktorVersion = "1.3.0-rc"
+val ktorVersion = "1.2.5"
 
 dependencies {
     // Ktor Server
