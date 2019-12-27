@@ -22,7 +22,7 @@ class UFOSightingsApp : Kotless() {
     override fun prepare(app: Application) {
         with(app) {
             main()
-            routing { routes() }
+            routes()
         }
     }
 }
